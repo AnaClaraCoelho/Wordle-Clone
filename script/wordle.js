@@ -70,7 +70,7 @@ const palavrasValidasAcentuadas = ['sagaz', 'amago', 'negro', 'êxito', 'mexer',
 'choça', 'corte', 'mouro', 'aéreo', 'ceifa', 'modal', 'ferir', 'garra', 'voilà', 'anzol', 'abade','nesga', 'pluma', 'sofia',
 'outra', 'pátio', 'dados', 'grife', 'lábil', 'diabo', 'raiar', 'pavio', 'sabiá','trair', 'skate', 'pagar', 'roubo', 'pazes',
 'dique', 'xampu', 'tacho', 'podre', 'disso', 'surra', 'tíbio','filme', 'abono', 'caibo', 'cisco', 'farei', 'dobro', 'jeová',
-'domar', 'digna', 'couve', 'quais', 'posta','régia', 'notar', 'bruxa', 'barra', 'regem', 'volto', 'toque', 'buril']
+'domar', 'digna', 'couve', 'quais', 'posta','régia', 'notar', 'bruxa', 'barra', 'regem', 'volto', 'toque', 'buril', 'amora', 'vinho']
 
 let palavrasValidas = []
 
@@ -119,7 +119,6 @@ function gerarData() {
 
     var dia = palavrasValidas[indice].normalize('NFD').replace(/[\u0300-\u036f]/g, "")
     palavraDoDia = dia.toUpperCase()
-    console.log(palavraDoDia)
 }
 
 
@@ -130,7 +129,7 @@ const listener = event => {
     validar(letter)
 }
 
-const clicar = event =>{
+const teclar = event =>{
     if(event.target.classList.contains('tecla')){
         let tecla = event.target.textContent
         textTales.push(tecla)
@@ -150,13 +149,12 @@ const validar = letter =>{
         if (textTales.length >= 5 ){
             tentativas ++
             textTales.pop()
-            
-            console.log(textTales.join("").toLowerCase())
             if (!palavrasValidas.includes(textTales.join("").toLowerCase())){
-                console.log('Palavra inválida')
+                alert('Palavra inválida')
                 return
             }
             validarposicao()
+            pintarTeclas()
             if (tentativas == 6){
                 console.log('GAME OVER')
                 return
@@ -192,22 +190,47 @@ const validar = letter =>{
     changeLines(letter)
 }
 
+const pintarTeclas = (textTales,estado) => {
+    let teclas = document.querySelectorAll('.tecla')
+    for (tecla of teclas){
+            if (textTales == tecla.textContent){
+                console.log(estado)
+                if (estado === 'incorreto'){
+                    tecla.classList.add('incorrect')
+                }
+                else if (estado === 'correto'){
+                    tecla.classList.add('correct')
+                }
+                else if (estado === 'todocorreto'){
+                    tecla.classList.add('fullcorrect')
+                }
+        }}
+}
+
 const validarposicao = () => {
     let palavraDoDia_ = palavraDoDia
     for (let item in palavraDoDia_){
         let taleLine = `l${linha}c${parseInt(item)+ 1}`
         let tales = document.getElementById(taleLine)
+        let estado
         if (palavraDoDia_[item] === textTales[item]){
             tales.classList.add('fullcorrect')
+            estado = 'todocorreto'
+            pintarTeclas(textTales[item], estado)
         }
         else if (palavraDoDia_.includes(textTales[item])){
             tales.classList.add('correct')
+            estado = 'correto'
+            pintarTeclas(textTales[item], estado)
         }
         else {
             tales.classList.add('incorrect')
+            estado = 'incorreto'
+            pintarTeclas(textTales[item], estado)
         }
     }
 }
 
-body.addEventListener('click', clicar)
+
+body.addEventListener('click', teclar)
 body.addEventListener('keydown', listener)
