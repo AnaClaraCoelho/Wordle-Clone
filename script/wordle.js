@@ -1,5 +1,5 @@
-var palavraDoDia 
-const palavrasValidasAcentuadas = ['sagaz', 'amago', 'negro', 'êxito', 'mexer', 'termo', 'nobre', 'senso', 'algoz','afeto',
+const palavraDoDia = ""
+const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito', 'festa', 'missa', 'ossos', 'mexer', 'termo', 'nobre', 'senso', 'algoz','afeto',
 'plena', 'ética', 'mútua', 'tênue', 'sutil', 'vigor', 'aquém', 'fazer', 'porém', 'audaz', 'assim','sanar', 'seção', 'ainda',
 'inato', 'cerne', 'fosse', 'ideia', 'poder', 'moral', 'desde', 'torpe', 'muito', 'justo','honra', 'fútil', 'sobre', 'cozer',
 'anexo', 'quiçá', 'razão', 'etnia', 'ícone', 'sonho', 'tange', 'égide', 'lapso','amigo','mútuo', 'expor', 'haver', 'valha',
@@ -121,7 +121,6 @@ function gerarData() {
     palavraDoDia = dia.toUpperCase()
 }
 
-
 // Para receber o que o usuário digitou 
 const listener = event => { 
     let letter = event.key.toUpperCase() // Pega a tecla digitada em passa pra Upper case 
@@ -144,6 +143,8 @@ const changeLines = letter => {
     tales.innerText = letter
 }
 
+console.log(palavraDoDia)
+
 const validar = letter =>{
     if (letter == 'ENTER'){
         if (textTales.length >= 5 ){
@@ -153,6 +154,7 @@ const validar = letter =>{
                 alert('Palavra inválida')
                 return
             }
+
             validarposicao()
             pintarTeclas()
             if (tentativas == 6){
@@ -194,34 +196,36 @@ const pintarTeclas = (textTales,estado) => {
     let teclas = document.querySelectorAll('.tecla')
     for (tecla of teclas){
             if (textTales == tecla.textContent){
-                console.log(estado)
-                if (estado === 'incorreto'){
-                    tecla.classList.add('incorrect')
+                if (estado === 'todocorreto'){
+                    tecla.classList.add('fullcorrect')
                 }
                 else if (estado === 'correto'){
                     tecla.classList.add('correct')
                 }
-                else if (estado === 'todocorreto'){
-                    tecla.classList.add('fullcorrect')
+                else if (estado === 'incorreto'){
+                    tecla.classList.add('incorrect')
                 }
         }}
 }
 
 const validarposicao = () => {
-    let palavraDoDia_ = palavraDoDia
-    for (let item in palavraDoDia_){
+    let palavraDoDia_ = palavraDoDia.split("")
+    let estado 
+    for (let item in palavraDoDia){
         let taleLine = `l${linha}c${parseInt(item)+ 1}`
         let tales = document.getElementById(taleLine)
-        let estado
-        if (palavraDoDia_[item] === textTales[item]){
+        if (palavraDoDia[item] == textTales[item]){
             tales.classList.add('fullcorrect')
             estado = 'todocorreto'
             pintarTeclas(textTales[item], estado)
+            let el = palavraDoDia[item]
+            palavraDoDia_.splice(palavraDoDia_.indexOf(el), 1)
         }
         else if (palavraDoDia_.includes(textTales[item])){
             tales.classList.add('correct')
             estado = 'correto'
             pintarTeclas(textTales[item], estado)
+            palavraDoDia_.splice(parseInt(item) + 1, 1)
         }
         else {
             tales.classList.add('incorrect')
