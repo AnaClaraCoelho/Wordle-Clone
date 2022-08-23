@@ -1,5 +1,5 @@
-var palavraDoDia
-const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito', 'festa', 'missa', 'ossos', 'mexer', 'termo', 'nobre', 'senso', 'algoz','afeto',
+var wordOfTheDay
+const accentedValidWords = ['errar', 'sagaz', 'amago', 'negro', 'êxito', 'festa', 'missa', 'ossos', 'mexer', 'termo', 'nobre', 'senso', 'algoz','afeto',
 'plena', 'ética', 'mútua', 'tênue', 'sutil', 'vigor', 'aquém', 'fazer', 'porém', 'audaz', 'assim','sanar', 'seção', 'ainda',
 'inato', 'cerne', 'fosse', 'ideia', 'poder', 'moral', 'desde', 'torpe', 'muito', 'justo','honra', 'fútil', 'sobre', 'cozer',
 'anexo', 'quiçá', 'razão', 'etnia', 'ícone', 'sonho', 'tange', 'égide', 'lapso','amigo','mútuo', 'expor', 'haver', 'valha',
@@ -72,20 +72,20 @@ const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito',
 'dique', 'xampu', 'tacho', 'podre', 'disso', 'surra', 'tíbio','filme', 'abono', 'caibo', 'cisco', 'farei', 'dobro', 'jeová',
 'domar', 'digna', 'couve', 'quais', 'posta','régia', 'notar', 'bruxa', 'barra', 'regem', 'volto', 'toque', 'buril', 'amora', 'vinho']
 
-let palavrasValidas = []
+let validWords = []
 
-palavrasValidasAcentuadas.forEach(function(element) {
-    palavrasValidas.push(element.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
+accentedValidWords.forEach(function(element) {
+    validWords.push(element.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
 })
 
 const body = document.querySelector('body')
-let tentativas = 0
+let attempts = 0
 
 const teclado =  [
     'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q',
     'R','S','T','U','V','W','X','Y','Z', 'ENTER', 'BACKSPACE'];
 
-let textTales = []
+let userInput = []
 let linha = 1
 
 gerarData()
@@ -117,123 +117,120 @@ function gerarData() {
     // pegar o indice da minha lista e compara com a data atual -> acha o indice que tem a data
     let indice = listDate.indexOf(new Date().toLocaleDateString())
 
-    var dia = palavrasValidas[indice].normalize('NFD').replace(/[\u0300-\u036f]/g, "")
-    palavraDoDia = dia.toUpperCase()
+    var dia = validWords[indice].normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+    wordOfTheDay = dia.toUpperCase()
 }
 
 // Para receber o que o usuário digitou 
 const listener = event => { 
     let letter = event.key.toUpperCase() // Pega a tecla digitada em passa pra Upper case 
-    textTales.push(letter)
+    userInput.push(letter)
     validar(letter)
 }
 
-const teclar = event =>{
-    if(event.target.classList.contains('tecla')){
-        let tecla = event.target.textContent
-        textTales.push(tecla)
-        validar(tecla.toUpperCase())
+const type = event =>{
+    if(event.target.classList.contains('userKey')){
+        let userKey = event.target.textContent
+        userInput.push(userKey)
+        validar(userKey.toUpperCase())
     }
     
 }
 
 const changeLines = letter => {  
-    let taleLine = `l${linha}c${textTales.length}`
-    let tales = document.getElementById(taleLine)
-    tales.innerText = letter
+    let keyLine = `l${linha}c${userInput.length}`
+    let keys = document.getElementById(keyLine)
+    keys.innerText = letter
 }
-
-console.log(palavraDoDia)
 
 const validar = letter =>{
     if (letter == 'ENTER'){
-        if (textTales.length >= 5 ){
-            tentativas ++
-            textTales.pop()
-            if (!palavrasValidas.includes(textTales.join("").toLowerCase())){
+        if (userInput.length >= 5 ){
+            attempts ++
+            userInput.pop()
+            if (!validWords.includes(userInput.join("").toLowerCase())){
                 alert('Palavra inválida')
                 return
             }
-
-            validarposicao()
-            pintarTeclas()
-            if (tentativas == 6){
+            positionValidate()
+            changeKeyboardCollor()
+            if (attempts == 6){
                 console.log('GAME OVER')
                 return
             }
-            if (palavraDoDia.toUpperCase() == textTales.join("")){
+            if (wordOfTheDay.toUpperCase() == userInput.join("")){
                 console.log("ACERTOU!!!")
                 return 
             }
             else{
                 // Passar pra próxima linha
-                textTales = []
+                userInput = []
                 linha += 1
             }
         } 
-        else if (textTales.length < 5 ){
-            textTales.pop()
+        else if (userInput.length < 5 ){
+            userInput.pop()
             return
         }
         return 1
     }
 
     if (letter == 'BACKSPACE' || letter == ""){
-        textTales.pop()
+        userInput.pop()
         changeLines('')
-        textTales.pop()
+        userInput.pop()
         return 1;
     }
     if (!teclado.includes(letter)){
-        textTales.pop()
+        userInput.pop()
         console.log('Não é uma variável válida!')
         return 1
     }
     changeLines(letter)
 }
 
-const pintarTeclas = (textTales,estado) => {
-    let teclas = document.querySelectorAll('.tecla')
-    for (tecla of teclas){
-            if (textTales == tecla.textContent){
-                if (estado === 'todocorreto'){
-                    tecla.classList.add('fullcorrect')
+const changeKeyboardCollor = (userInput,state) => {
+    let userKeys = document.querySelectorAll('.userKey')
+    for (userKey of userKeys){
+            if (userInput == userKey.textContent){
+                if (state === 'todocorreto'){
+                    userKey.classList.add('fullcorrect')
                 }
-                else if (estado === 'correto'){
-                    tecla.classList.add('correct')
+                else if (state === 'correto'){
+                    userKey.classList.add('correct')
                 }
-                else if (estado === 'incorreto'){
-                    tecla.classList.add('incorrect')
+                else if (state === 'incorreto'){
+                    userKey.classList.add('incorrect')
                 }
         }}
 }
 
-const validarposicao = () => {
-    let palavraDoDia_ = palavraDoDia.split("")
-    let estado 
-    for (let item in palavraDoDia){
-        let taleLine = `l${linha}c${parseInt(item)+ 1}`
-        let tales = document.getElementById(taleLine)
-        if (palavraDoDia[item] == textTales[item]){
-            tales.classList.add('fullcorrect')
-            estado = 'todocorreto'
-            pintarTeclas(textTales[item], estado)
-            let el = palavraDoDia[item]
-            palavraDoDia_.splice(palavraDoDia_.indexOf(el), 1)
+const positionValidate = () => {
+    let wordOfTheDayFlag = wordOfTheDay.split("")
+    let state 
+    for (let item in wordOfTheDay){
+        let keyLine = `l${linha}c${parseInt(item)+ 1}`
+        let keys = document.getElementById(keyLine)
+        if (wordOfTheDay[item] == userInput[item]){
+            keys.classList.add('fullcorrect')
+            state = 'todocorreto'
+            changeKeyboardCollor(userInput[item], state)
+            let el = wordOfTheDay[item]
+            wordOfTheDayFlag.splice(wordOfTheDayFlag.indexOf(el), 1)
         }
-        else if (palavraDoDia_.includes(textTales[item])){
-            tales.classList.add('correct')
-            estado = 'correto'
-            pintarTeclas(textTales[item], estado)
-            palavraDoDia_.splice(parseInt(item) + 1, 1)
+        else if (wordOfTheDayFlag.includes(userInput[item])){
+            keys.classList.add('correct')
+            state = 'correto'
+            changeKeyboardCollor(userInput[item], state)
+            wordOfTheDayFlag.splice(parseInt(item) + 1, 1)
         }
         else {
-            tales.classList.add('incorrect')
-            estado = 'incorreto'
-            pintarTeclas(textTales[item], estado)
+            keys.classList.add('incorrect')
+            state = 'incorreto'
+            changeKeyboardCollor(userInput[item], state)
         }
     }
 }
 
-body.addEventListener('click', teclar)
+body.addEventListener('click', type)
 body.addEventListener('keydown', listener)
