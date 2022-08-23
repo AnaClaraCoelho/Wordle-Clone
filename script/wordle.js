@@ -86,7 +86,7 @@ const teclado =  [
     'R','S','T','U','V','W','X','Y','Z', 'ENTER', 'BACKSPACE'];
 
 let userInput = []
-let linha = 1
+let line = 1
 
 gerarData()
 function gerarData() {
@@ -138,7 +138,7 @@ const type = event =>{
 }
 
 const changeLines = letter => {  
-    let keyLine = `l${linha}c${userInput.length}`
+    let keyLine = `l${line}c${userInput.length}`
     let keys = document.getElementById(keyLine)
     keys.innerText = letter
 }
@@ -165,7 +165,7 @@ const validar = letter =>{
             else{
                 // Passar pra próxima linha
                 userInput = []
-                linha += 1
+                line += 1
             }
         } 
         else if (userInput.length < 5 ){
@@ -189,7 +189,7 @@ const validar = letter =>{
     changeLines(letter)
 }
 
-const changeKeyboardCollor = (userInput,state) => {
+const changeKeyboardCollor = (userInput,state) => {  // muda a cor das teclas
     let userKeys = document.querySelectorAll('.userKey')
     for (userKey of userKeys){
             if (userInput == userKey.textContent){
@@ -205,11 +205,11 @@ const changeKeyboardCollor = (userInput,state) => {
         }}
 }
 
-const positionValidate = () => {
+const positionValidate = () => {            // muda a cor do input do usuario
     let wordOfTheDayFlag = wordOfTheDay.split("")
     let state 
     for (let item in wordOfTheDay){
-        let keyLine = `l${linha}c${parseInt(item)+ 1}`
+        let keyLine = `l${line}c${parseInt(item)+ 1}`
         let keys = document.getElementById(keyLine)
         if (wordOfTheDay[item] == userInput[item]){
             keys.classList.add('fullcorrect')
