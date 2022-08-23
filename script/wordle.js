@@ -1,4 +1,4 @@
-const palavraDoDia = ""
+var palavraDoDia
 const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito', 'festa', 'missa', 'ossos', 'mexer', 'termo', 'nobre', 'senso', 'algoz','afeto',
 'plena', 'ética', 'mútua', 'tênue', 'sutil', 'vigor', 'aquém', 'fazer', 'porém', 'audaz', 'assim','sanar', 'seção', 'ainda',
 'inato', 'cerne', 'fosse', 'ideia', 'poder', 'moral', 'desde', 'torpe', 'muito', 'justo','honra', 'fútil', 'sobre', 'cozer',
@@ -234,7 +234,6 @@ const validarposicao = () => {
         }
     }
 }
-
 
 body.addEventListener('click', teclar)
 body.addEventListener('keydown', listener)
