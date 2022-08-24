@@ -1,6 +1,6 @@
 var palavraDoDia
-const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito', 'festa', 'missa', 'ossos', 'mexer', 'termo', 'nobre', 'senso', 'algoz','afeto',
-'plena', 'ética', 'mútua', 'tênue', 'sutil', 'vigor', 'aquém', 'fazer', 'porém', 'audaz', 'assim','sanar', 'seção', 'ainda',
+const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito', 'missa', 'arroz', 'ossos', 'mexer', 'termo', 'nobre', 'senso', 'algoz','afeto',
+'plena', 'ética', 'festa', 'mútua', 'tênue', 'sutil', 'vigor', 'aquém', 'fazer', 'porém', 'audaz', 'assim','sanar', 'seção', 'ainda',
 'inato', 'cerne', 'fosse', 'ideia', 'poder', 'moral', 'desde', 'torpe', 'muito', 'justo','honra', 'fútil', 'sobre', 'cozer',
 'anexo', 'quiçá', 'razão', 'etnia', 'ícone', 'sonho', 'tange', 'égide', 'lapso','amigo','mútuo', 'expor', 'haver', 'valha',
 'hábil', 'tempo', 'seara', 'dengo', 'então', 'pesar', 'ávido', 'posse','genro', 'boçal', 'coser', 'ardil', 'causa','fugaz',
@@ -74,6 +74,7 @@ const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito',
 
 let palavrasValidas = []
 
+
 palavrasValidasAcentuadas.forEach(function(element) {
     palavrasValidas.push(element.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
 })
@@ -143,10 +144,9 @@ const changeLines = letter => {
     tales.innerText = letter
 }
 
-console.log(palavraDoDia)
-
 const validar = letter =>{
     if (letter == 'ENTER'){
+        console.log(palavraDoDia)
         if (textTales.length >= 5 ){
             tentativas ++
             textTales.pop()
@@ -211,29 +211,34 @@ const pintarTeclas = (textTales,estado) => {
 const validarposicao = () => {
     let palavraDoDia_ = palavraDoDia.split("")
     let estado 
-    for (let item in palavraDoDia){
-        let taleLine = `l${linha}c${parseInt(item)+ 1}`
-        let tales = document.getElementById(taleLine)
-        if (palavraDoDia[item] == textTales[item]){
-            tales.classList.add('fullcorrect')
-            estado = 'todocorreto'
-            pintarTeclas(textTales[item], estado)
-            let el = palavraDoDia[item]
-            palavraDoDia_.splice(palavraDoDia_.indexOf(el), 1)
-        }
-        else if (palavraDoDia_.includes(textTales[item])){
-            tales.classList.add('correct')
-            estado = 'correto'
-            pintarTeclas(textTales[item], estado)
-            palavraDoDia_.splice(parseInt(item) + 1, 1)
-        }
-        else {
-            tales.classList.add('incorrect')
-            estado = 'incorreto'
-            pintarTeclas(textTales[item], estado)
-        }
+        for (let item in palavraDoDia){
+            let tales = document.getElementById(`l${linha}c${parseInt(item)+ 1}`)
+            if (palavraDoDia[item] == textTales[item]){
+                tales.classList.add('fullcorrect')
+                estado = 'todocorreto'
+                pintarTeclas(textTales[item], estado)
+                let el = palavraDoDia[item]
+                palavraDoDia_.splice(palavraDoDia_.indexOf(el), 1)
+        }}
+        for (let item in palavraDoDia){
+            let tales = document.getElementById(`l${linha}c${parseInt(item)+ 1}`)
+            if (palavraDoDia_.includes(textTales[item])){
+                tales.classList.add('correct')
+                estado = 'correto'
+                pintarTeclas(textTales[item], estado)
+                palavraDoDia_.splice(parseInt(item) + 1, 1)
+            }
+            else {
+                tales.classList.add('incorrect')
+                estado = 'incorreto'
+                pintarTeclas(textTales[item], estado)
+            }
     }
 }
+
+let objeto = {}
+
+
 
 body.addEventListener('click', teclar)
 body.addEventListener('keydown', listener)
