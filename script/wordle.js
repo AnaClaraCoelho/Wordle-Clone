@@ -74,6 +74,13 @@ const palavrasValidasAcentuadas = ['errar', 'sagaz', 'amago', 'negro', 'êxito',
 
 let palavrasValidas = []
 
+// Pega o modal
+var modal = document.getElementById("Modal");
+
+// Pega o elemento <span> do modal
+var span = document.getElementsByClassName("fechar")[0];
+
+var p = document.querySelector('#texto-modal')
 
 palavrasValidasAcentuadas.forEach(function(element) {
     palavrasValidas.push(element.normalize('NFD').replace(/[\u0300-\u036f]/g, ""))
@@ -122,6 +129,27 @@ function gerarData() {
     palavraDoDia = dia.toUpperCase()
 }
 
+// Gerar modal
+const gerarModal = (modalText) => {
+    const showModal  = function() {
+        modal.style.display = "block";
+        p.textContent = modalText
+    }
+    showModal()
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+        modal.style.display = "none";
+        }
+    }
+}
+        
+
 // Para receber o que o usuário digitou 
 const listener = event => { 
     let letter = event.key.toUpperCase() // Pega a tecla digitada em passa pra Upper case 
@@ -146,23 +174,22 @@ const changeLines = letter => {
 
 const validar = letter =>{
     if (letter == 'ENTER'){
-        console.log(palavraDoDia)
         if (textTales.length >= 5 ){
             tentativas ++
             textTales.pop()
             if (!palavrasValidas.includes(textTales.join("").toLowerCase())){
-                alert('Palavra inválida')
-                return
+            gerarModal('Palavra Inválida')
+            return
             }
-
             validarposicao()
             pintarTeclas()
             if (tentativas == 6){
-                console.log('GAME OVER')
+                gerarModal('GAME OVER!!')
                 return
             }
             if (palavraDoDia.toUpperCase() == textTales.join("")){
-                console.log("ACERTOU!!!")
+                gerarModal('Parabéns!! Você Acertou!')
+                startConfetti()
                 return 
             }
             else{
@@ -235,10 +262,6 @@ const validarposicao = () => {
             }
     }
 }
-
-let objeto = {}
-
-
 
 body.addEventListener('click', teclar)
 body.addEventListener('keydown', listener)
